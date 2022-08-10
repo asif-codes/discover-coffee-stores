@@ -13,21 +13,21 @@ import { StoreContext } from "../../store/store-context";
 
 import { fetcher, isEmpty } from "../../utils";
 
-export async function getStaticProps(staticProps) {
-  const params = staticProps.params;
+export const getStaticProps = async (context) => {
+  const params = context.params;
 
   const coffeeStores = await fetchCoffeeStores();
   const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
-    return coffeeStore.id.toString() === params.id; //dynamic id
+    return coffeeStore.id.toString() === params.id;
   });
   return {
     props: {
       coffeeStore: findCoffeeStoreById ? findCoffeeStoreById : {},
     },
   };
-}
+};
 
-export async function getStaticPaths() {
+export const getStaticPaths = async () => {
   const coffeeStores = await fetchCoffeeStores();
   const paths = coffeeStores.map((coffeeStore) => {
     return {
@@ -40,16 +40,14 @@ export async function getStaticPaths() {
     paths,
     fallback: true,
   };
-}
+};
 
-const CoffeeStore = (initialProps) => {
+const CoffeeStore = (props) => {
   const router = useRouter();
 
   const id = router.query.id;
 
-  const [coffeeStore, setCoffeeStore] = useState(
-    initialProps.coffeeStore || {}
-  );
+  const [coffeeStore, setCoffeeStore] = useState(props.coffeeStore || {});
 
   const {
     state: { coffeeStores },
@@ -73,17 +71,17 @@ const CoffeeStore = (initialProps) => {
         }),
       });
 
-      const dbCoffeeStore = await response.json();
+      await response.json();
     } catch (err) {
       console.error("Error creating coffee store", err);
     }
   };
 
   useEffect(() => {
-    if (isEmpty(initialProps.coffeeStore)) {
+    if (isEmpty(props.coffeeStore)) {
       if (coffeeStores.length > 0) {
         const coffeeStoreFromContext = coffeeStores.find((coffeeStore) => {
-          return coffeeStore.id.toString() === id; //dynamic id
+          return coffeeStore.id.toString() === id;
         });
 
         if (coffeeStoreFromContext) {
@@ -92,10 +90,9 @@ const CoffeeStore = (initialProps) => {
         }
       }
     } else {
-      // SSG
-      handleCreateCoffeeStore(initialProps.coffeeStore);
+      handleCreateCoffeeStore(props.coffeeStore);
     }
-  }, [id, initialProps, initialProps.coffeeStore, coffeeStores]);
+  }, [id, props, props.coffeeStore, coffeeStores]);
 
   const {
     address = "",

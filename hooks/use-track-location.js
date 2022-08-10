@@ -4,14 +4,13 @@ import { StoreContext, ACTION_TYPES } from "../store/store-context";
 const useTrackLocation = () => {
   const [locationErrorMsg, setLocationErrorMsg] = useState("");
   const [isFindingLocation, setIsFindingLocation] = useState(false);
-  // const [latLong, setLatLong] = useState("");
+
   const { dispatch } = useContext(StoreContext);
 
   const success = (position) => {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
 
-    // setLatLong(`${latitude},${longitude}`);
     dispatch({
       type: ACTION_TYPES.SET_LAT_LONG,
       payload: { latLong: `${latitude},${longitude}` },
@@ -39,7 +38,6 @@ const useTrackLocation = () => {
   return {
     locationErrorMsg,
     isFindingLocation,
-    // latLong,
     handleTrackLocation,
   };
 };

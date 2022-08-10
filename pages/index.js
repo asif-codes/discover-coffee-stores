@@ -3,7 +3,7 @@ import Image from "next/image";
 import Banner from "../components/banner.component";
 import Card from "../components/card";
 import styles from "../styles/Home.module.css";
-// import coffeeStoresData from "../data/coffee-stores.json";
+
 import React, { useEffect, useState, useContext } from "react";
 import { fetchCoffeeStores } from "../lib/coffee-stores";
 import useTrackLocation from "../hooks/use-track-location";
@@ -13,7 +13,6 @@ export default function Home(props) {
   const { locationErrorMsg, isFindingLocation, handleTrackLocation } =
     useTrackLocation();
 
-  // const [coffeeStores, setCoffeeStores] = useState("");
   const [coffeeStoresError, setCoffeeStoresError] = useState(null);
   const { dispatch, state } = useContext(StoreContext);
 
@@ -35,10 +34,8 @@ export default function Home(props) {
           });
 
           setCoffeeStoresError("");
-
-          // setCoffeeStores(fetchedCoffeeStores);
         } catch (error) {
-          console.log(error);
+          console.error(error);
           setCoffeeStoresError(error.message);
         }
       }
